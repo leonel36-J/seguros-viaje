@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SeguroViaje — Iniciar sesión</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:    #0F1B2D;
+      --blue:    #1E6FBF;
+      --blue-lt: #2E85DC;
+      --teal:    #3BC4A0;
+      --teal-dk: #2AA88A;
+      --white:   #F8FAFC;
+      --muted:   #8A9BB0;
+      --error:   #E05555;
+      --card-bg: #162336;
+      --input-bg:#1C2D42;
+      --border:  #243550;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Inter', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+    }
+
+    .page {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 480px;
+    }
+
+    .panel-left {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px;
+      background: linear-gradient(145deg, #0F1B2D 0%, #122540 60%, #1a3a5c 100%);
+      overflow: hidden;
+    }
+
+    .panel-left::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(30,111,191,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .globe-wrap {
+      position: relative;
+      width: 260px;
+      height: 260px;
+      margin-bottom: 48px;
+    }
+
+    .globe-wrap svg {
+      width: 100%;
+      height: 100%;
+      animation: spin 22s linear infinite;
+      filter: drop-shadow(0 0 32px rgba(59,196,160,0.35));
+    }
+
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    .brand-tag {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 16px;
+    }
+
+    .panel-left h1 {
+      font-size: 2.6rem;
+      font-weight: 700;
+      line-height: 1.15;
+      text-align: center;
+      color: var(--white);
+    }
+
+    .panel-left h1 span { color: var(--teal); }
+
+    .panel-left p {
+      margin-top: 18px;
+      font-size: 1rem;
+      color: var(--muted);
+      text-align: center;
+      max-width: 340px;
+      line-height: 1.65;
+    }
+
+    .dots { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+
+    .dot {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--teal);
+      opacity: 0.08;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .dot:nth-child(1) { width: 180px; height: 180px; top: -40px; left: -40px; animation-delay: 0s; }
+    .dot:nth-child(2) { width: 120px; height: 120px; bottom: 60px; right: -30px; animation-delay: 3s; }
+    .dot:nth-child(3) { width: 60px; height: 60px; bottom: 30%; left: 10%; animation-delay: 5s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-18px); }
+    }
+
+    .panel-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 40px;
+      background: var(--card-bg);
+      border-left: 1px solid var(--border);
+    }
+
+    .form-box { width: 100%; max-width: 360px; }
+
+    .form-box .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 40px;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--blue), var(--teal));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-icon svg { width: 20px; height: 20px; }
+
+    .logo-name { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.3px; }
+    .logo-name span { color: var(--teal); }
+
+    .form-box h2 { font-size: 1.55rem; font-weight: 700; color: var(--white); margin-bottom: 6px; }
+
+    .form-box .subtitle { font-size: 0.875rem; color: var(--muted); margin-bottom: 36px; }
+
+    label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .field { margin-bottom: 22px; }
+
+    .input-wrap { position: relative; }
+
+    .input-wrap svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 13px 14px 13px 42px;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    input:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(59,196,160,0.15);
+    }
+
+    input::placeholder { color: #4a607a; }
+
+    .btn-login {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--blue), var(--teal));
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s, transform .1s;
+      position: relative;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .btn-login:hover { opacity: .9; }
+    .btn-login:active { transform: scale(0.98); }
+    .btn-login:disabled { opacity: .6; cursor: not-allowed; }
+
+    .btn-login .spinner {
+      display: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: rotate .7s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes rotate { to { transform: rotate(360deg); } }
+
+    .btn-login.loading .btn-text { display: none; }
+    .btn-login.loading .spinner { display: block; }
+
+    .error-msg {
+      display: none;
+      background: rgba(224,85,85,0.12);
+      border: 1px solid rgba(224,85,85,0.35);
+      color: #f08080;
+      font-size: 0.82rem;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    .error-msg.show { display: block; }
+
+    .footer-note {
+      margin-top: 32px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #3a4f65;
+    }
+
+    @media (max-width: 820px) {
+      .page { grid-template-columns: 1fr; }
+      .panel-left { display: none; }
+      .panel-right { min-height: 100vh; background: var(--navy); border-left: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="panel-left">
+    <div class="dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+
+    <div class="globe-wrap">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <circle cx="100" cy="100" r="90" stroke="#1E6FBF" stroke-width="1.5" stroke-dasharray="4 6" opacity="0.5"/>
+        <circle cx="100" cy="100" r="72" fill="#122540" stroke="#1E6FBF" stroke-width="2"/>
+        <ellipse cx="100" cy="100" rx="72" ry="24" stroke="#1E6FBF" stroke-width="1" opacity="0.4"/>
+        <ellipse cx="100" cy="100" rx="72" ry="48" stroke="#1E6FBF" stroke-width="1" opacity="0.25"/>
+        <ellipse cx="100" cy="100" rx="28" ry="72" stroke="#1E6FBF" stroke-width="1" opacity="0.4"/>
+        <line x1="28" y1="100" x2="172" y2="100" stroke="#3BC4A0" stroke-width="1.5" opacity="0.5"/>
+        <path d="M70 75 Q80 65 90 70 Q100 60 110 68 Q120 72 115 82 Q108 90 98 88 Q85 92 78 85 Z" fill="#3BC4A0" opacity="0.45"/>
+        <path d="M55 105 Q62 97 70 100 Q75 108 68 115 Q60 118 55 112 Z" fill="#3BC4A0" opacity="0.35"/>
+        <path d="M120 88 Q128 82 136 87 Q140 95 133 100 Q125 103 120 97 Z" fill="#3BC4A0" opacity="0.35"/>
+        <path d="M88 112 Q95 105 104 108 Q110 116 103 123 Q94 126 88 120 Z" fill="#2E85DC" opacity="0.4"/>
+        <circle cx="100" cy="100" r="4" fill="#3BC4A0"/>
+        <circle cx="100" cy="100" r="8" fill="#3BC4A0" opacity="0.25"/>
+      </svg>
+    </div>
+
+    <p class="brand-tag">Seguro Viaje</p>
+    <h1>Tu viaje, <span>protegido</span><br/>en cada destino</h1>
+    <p>Accede al panel de gestión para administrar pólizas, clientes y coberturas en todo el mundo.</p>
+  </div>
+
+  <div class="panel-right">
+    <div class="form-box">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+        </div>
+        <span class="logo-name">Seguro<span>Viaje</span></span>
+      </div>
+
+      <h2>Bienvenido de nuevo</h2>
+      <p class="subtitle">Ingresa tus credenciales para continuar</p>
+
+      <div class="field">
+        <label for="email">Correo electrónico</label>
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          <input type="email" id="email" placeholder="usuario@empresa.com" autocomplete="email"/>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="password">Contraseña</label>
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <input type="password" id="password" placeholder="••••••••" autocomplete="current-password"/>
+        </div>
+      </div>
+
+      <button class="btn-login" id="btnLogin" onclick="handleLogin()">
+        <span class="btn-text">Iniciar sesión</span>
+        <div class="spinner"></div>
+      </button>
+
+      <div class="error-msg" id="errorMsg">Correo o contraseña incorrectos. Intenta nuevamente.</div>
+
+      <p class="footer-note">© 2026 SeguroViaje · Todos los derechos reservados</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const API_BASE = 'http://127.0.0.1:8000/api';
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleLogin();
+  });
+
+  async function handleLogin() {
+    const email    = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const btn      = document.getElementById('btnLogin');
+    const errMsg   = document.getElementById('errorMsg');
+
+    if (!email || !password) {
+      showError('Completa todos los campos para continuar.');
+      return;
+    }
+
+    btn.classList.add('loading');
+    btn.disabled = true;
+    errMsg.classList.remove('show');
+
+    try {
+      const response = await fetch(`${API_BASE}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        const msg = data?.message || 'Credenciales incorrectas. Intenta nuevamente.';
+        showError(msg);
+        return;
+      }
+
+      sessionStorage.setItem('access_token',   data.access_token);
+      sessionStorage.setItem('token_type',     data.token_type);          // "Bearer"
+      sessionStorage.setItem('nombreUsuario',  data.usuario.nombre);
+      sessionStorage.setItem('emailUsuario',   data.usuario.email);
+      sessionStorage.setItem('idUsuario',      data.usuario.id_usuario);
+      sessionStorage.setItem('idRol',          data.usuario.id_rol);
+      sessionStorage.setItem('rol',            data.usuario.rol?.rol ?? '');
+      sessionStorage.setItem('usuario',        JSON.stringify(data.usuario));
+      
+
+      window.location.href = 'index.html';
+
+    } catch (err) {
+      console.error('Error de login:', err);
+      showError('No se pudo conectar con el servidor. Verifica que la API esté en línea.');
+    } finally {
+      btn.classList.remove('loading');
+      btn.disabled = false;
+    }
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('errorMsg');
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+</script>
+</body>
+</html>
