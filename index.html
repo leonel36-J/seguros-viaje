@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SeguroViaje — Panel Principal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:    #0F1B2D;
+      --blue:    #1E6FBF;
+      --blue-lt: #2E85DC;
+      --teal:    #3BC4A0;
+      --teal-dk: #2AA88A;
+      --white:   #F8FAFC;
+      --muted:   #8A9BB0;
+      --card-bg: #162336;
+      --card2:   #1C2D42;
+      --border:  #243550;
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: 'Inter', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      height: 64px;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, var(--blue), var(--teal));
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-icon svg { width: 18px; height: 18px; }
+
+    .logo-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .logo-name span { color: var(--teal); }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .user-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 16px 6px 6px;
+    }
+
+    .user-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), var(--teal));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .user-chip-name {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--white);
+    }
+
+    .btn-logout {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: border-color .2s, color .2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-logout:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    .btn-logout svg { width: 14px; height: 14px; }
+
+    
+.hamburger-btn{
+  background:none;
+  border:none;
+  color:white;
+  font-size:24px;
+  cursor:pointer;
+  margin-right:15px;
+}
+
+.sidebar{
+  position:fixed;
+  top:0;
+  left:-320px;
+  width:320px;
+  height:100%;
+  background:#162336;
+  border-right:1px solid #243550;
+  overflow-y:auto;
+  z-index:9999;
+  transition:.3s;
+  padding-top:70px;
+}
+
+.sidebar-open .sidebar{ left:0; }
+
+.menu-group{ border-bottom:1px solid #243550; }
+
+.menu-title{
+  padding:15px 20px;
+  cursor:pointer;
+  color:#3BC4A0;
+  font-weight:600;
+}
+
+.menu-items{ display:none; }
+
+.menu-items.open{ display:block; }
+
+.menu-items a{
+  display:block;
+  padding:12px 35px;
+  color:#F8FAFC;
+  text-decoration:none;
+  font-size:.9rem;
+}
+
+.menu-items a:hover{
+  background:#1C2D42;
+}
+
+/* ── Main content ── */
+
+    .main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 32px 80px;
+    }
+
+    /* ── Welcome hero ── */
+    .welcome-hero {
+      position: relative;
+      background: linear-gradient(135deg, #122540 0%, #163450 100%);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 52px 52px 52px 52px;
+      margin-bottom: 40px;
+      overflow: hidden;
+    }
+
+    .welcome-hero::after {
+      content: '';
+      position: absolute;
+      right: -60px;
+      top: -60px;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(59,196,160,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .welcome-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(59,196,160,0.12);
+      border: 1px solid rgba(59,196,160,0.3);
+      color: var(--teal);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 999px;
+      margin-bottom: 20px;
+    }
+
+    .welcome-tag .dot-live {
+      width: 7px;
+      height: 7px;
+      background: var(--teal);
+      border-radius: 50%;
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .4; transform: scale(0.7); }
+    }
+
+    .welcome-hero h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+
+    .welcome-hero h1 .user-name {
+      color: var(--teal);
+    }
+
+    .welcome-hero p {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 480px;
+      line-height: 1.65;
+    }
+
+    .hero-globe {
+      position: absolute;
+      right: 52px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 140px;
+      height: 140px;
+      opacity: .55;
+    }
+
+    .hero-globe svg {
+      width: 100%;
+      height: 100%;
+      animation: spin 28s linear infinite;
+    }
+
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    .meta-row {
+      display: flex;
+      gap: 24px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .meta-item svg { width: 14px; height: 14px; color: var(--teal); }
+
+    /* ── Stat cards ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      transition: border-color .2s, transform .2s;
+    }
+
+    .stat-card:hover {
+      border-color: rgba(59,196,160,0.4);
+      transform: translateY(-2px);
+    }
+
+    .stat-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .stat-icon svg { width: 20px; height: 20px; }
+
+    .stat-icon.blue  { background: rgba(30,111,191,0.15); color: var(--blue-lt); }
+    .stat-icon.teal  { background: rgba(59,196,160,0.15); color: var(--teal); }
+    .stat-icon.amber { background: rgba(245,177,66,0.15); color: #F5B142; }
+    .stat-icon.rose  { background: rgba(240,100,100,0.15); color: #F06464; }
+
+    .stat-value {
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* ── Quick actions ── */
+    .section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-bottom: 40px;
+    }
+
+    .action-card {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .action-card:hover {
+      border-color: var(--teal);
+      background: rgba(59,196,160,0.05);
+    }
+
+    .action-card svg { width: 22px; height: 22px; color: var(--teal); }
+
+    .action-card-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    .action-card-desc {
+      font-size: 0.77rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 32px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #2E4060;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 720px) {
+      .welcome-hero { padding: 36px 28px; }
+      .welcome-hero h1 { font-size: 1.75rem; }
+      .hero-globe { display: none; }
+      .main { padding: 28px 16px 60px; }
+      .topbar { padding: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+
+  <div class="menu-group" id="grupoConfiguracion">
+    <div class="menu-title" onclick="toggleGroup('configuracionMenu')">⚙ Configuración</div>
+    <div id="configuracionMenu" class="menu-items">
+      <a href="usuarios.html">Usuarios</a>
+      <a href="coberturas.html">Coberturas</a>
+      <a href="planes.html">Planes</a>
+      <a href="plan_coberturas.html">Plan Coberturas</a>
+    </div>
+  </div>
+
+  <div class="menu-group">
+    <div class="menu-title" onclick="toggleGroup('gestionMenu')">📋 Gestión</div>
+    <div id="gestionMenu" class="menu-items">
+      <a href="clientes.html" id="menuClientes">Clientes</a>
+
+<a href="cotizaciones.html" id="menuCotizaciones">
+  Cotizaciones
+</a>
+
+<a href="polizas.html" id="menuPolizas">
+  Pólizas
+</a>
+
+<a href="siniestros.html" id="menuSiniestros">
+  Siniestros
+</a>
+    </div>
+  </div>
+
+  <!-- <div class="menu-group">
+    <div class="menu-title" onclick="toggleGroup('reportesMenu')">📊 Reportes</div>
+    <div id="reportesMenu" class="menu-items">
+      <a href="reportes.html">Reporte 1</a>
+      <a href="reportes2.html">Reporte 2</a>
+    </div>
+  </div> -->
+
+</div>
+
+
+<!-- Topbar -->
+<header class="topbar">
+  <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
+  <div class="topbar-logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="2" y1="12" x2="22" y2="12"/>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+      </svg>
+    </div>
+    <span class="logo-name">Seguro<span>Viaje</span></span>
+  </div>
+
+  <div class="topbar-right">
+    <div class="user-chip">
+      <div class="user-avatar" id="avatarInitial">A</div>
+      <span class="user-chip-name" id="navName">Usuario</span>
+    </div>
+    <button class="btn-logout" onclick="logout()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+        <polyline points="16 17 21 12 16 7"/>
+        <line x1="21" y1="12" x2="9" y2="12"/>
+      </svg>
+      Cerrar sesión
+    </button>
+  </div>
+</header>
+
+<!-- Main -->
+<main class="main">
+
+  <!-- Welcome Hero -->
+  <section class="welcome-hero">
+    <div class="welcome-tag">
+      <span class="dot-live"></span>
+      Panel activo
+    </div>
+    <h1>¡Hola, <span class="user-name" id="welcomeName">Administrador</span>!</h1>
+    <p>Tienes acceso completo al panel de gestión. Administra pólizas, clientes y coberturas desde aquí.</p>
+
+    <div class="meta-row">
+      <div class="meta-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        <span id="currentDateTime">—</span>
+      </div>
+      <div class="meta-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        <span>Sesión segura activa</span>
+      </div>
+    </div>
+
+    <!-- Session info pills -->
+   <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;">
+
+  <!-- ID Usuario -->
+  <div style="background:rgba(15,27,45,0.6);
+              border:1px solid #243550;
+              border-radius:10px;
+              padding:8px 14px;
+              font-size:0.78rem;
+              font-family:'Inter',sans-serif;">
+
+    <span style="color:#3BC4A0;
+                 font-weight:600;
+                 margin-right:8px;">
+
+      ID Usuario
+
+    </span>
+
+    <span id="infoIdUsuario"
+          style="color:#F8FAFC;
+                 font-weight:500;">
+
+      —
+
+    </span>
+  </div>
+
+  <!-- ID ROL -->
+  <div style="background:rgba(15,27,45,0.6);
+              border:1px solid #243550;
+              border-radius:10px;
+              padding:8px 14px;
+              font-size:0.78rem;
+              font-family:'Inter',sans-serif;">
+
+    <span style="color:#3BC4A0;
+                 font-weight:600;
+                 margin-right:8px;">
+
+      ID Rol
+
+    </span>
+
+    <span id="infoIdRol"
+          style="color:#F8FAFC;
+                 font-weight:500;">
+
+      —
+
+    </span>
+  </div>
+
+  <!-- TOKEN -->
+  <div style="background:rgba(15,27,45,0.6);
+              border:1px solid #243550;
+              border-radius:10px;
+              padding:8px 14px;
+              font-size:0.78rem;
+              font-family:'Inter',sans-serif;
+              max-width:420px;
+              overflow:hidden;">
+
+    <span style="color:#3BC4A0;
+                 font-weight:600;
+                 margin-right:8px;">
+
+      Token
+
+    </span>
+
+    <span id="infoToken"
+          style="color:#F8FAFC;
+                 font-weight:500;
+                 word-break:break-all;
+                 font-size:0.72rem;">
+
+      —
+
+    </span>
+  </div>
+
+</div>
+
+    <!-- Decorative globe -->
+    <div class="hero-globe">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <circle cx="100" cy="100" r="90" stroke="#1E6FBF" stroke-width="1.5" stroke-dasharray="4 6" opacity="0.6"/>
+        <circle cx="100" cy="100" r="72" fill="#122540" stroke="#1E6FBF" stroke-width="2"/>
+        <ellipse cx="100" cy="100" rx="72" ry="24" stroke="#1E6FBF" stroke-width="1" opacity="0.4"/>
+        <ellipse cx="100" cy="100" rx="72" ry="48" stroke="#1E6FBF" stroke-width="1" opacity="0.25"/>
+        <ellipse cx="100" cy="100" rx="28" ry="72" stroke="#1E6FBF" stroke-width="1" opacity="0.4"/>
+        <line x1="28" y1="100" x2="172" y2="100" stroke="#3BC4A0" stroke-width="1.5" opacity="0.5"/>
+        <path d="M70 75 Q80 65 90 70 Q100 60 110 68 Q120 72 115 82 Q108 90 98 88 Q85 92 78 85 Z" fill="#3BC4A0" opacity="0.5"/>
+        <path d="M55 105 Q62 97 70 100 Q75 108 68 115 Q60 118 55 112 Z" fill="#3BC4A0" opacity="0.4"/>
+        <path d="M120 88 Q128 82 136 87 Q140 95 133 100 Q125 103 120 97 Z" fill="#3BC4A0" opacity="0.4"/>
+        <circle cx="100" cy="100" r="4" fill="#3BC4A0"/>
+        <circle cx="100" cy="100" r="9" fill="#3BC4A0" opacity="0.2"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon teal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      <div class="stat-value">1,284</div>
+      <div class="stat-label">Clientes activos</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon blue">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <div class="stat-value">3,472</div>
+      <div class="stat-label">Pólizas vigentes</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon amber">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </div>
+      <div class="stat-value">47</div>
+      <div class="stat-label">Siniestros pendientes</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon rose">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23"/>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+      </div>
+      <div class="stat-value">$248K</div>
+      <div class="stat-label">Prima cobrada</div>
+    </div>
+  </div>
+
+  <!-- Quick Actions
+  <p class="section-title">Accesos rápidos</p>
+  <div class="actions-grid">
+    <div class="action-card">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="12" y1="18" x2="12" y2="12"/>
+        <line x1="9" y1="15" x2="15" y2="15"/>
+      </svg>
+      <div>
+        <div class="action-card-title">Nueva póliza</div>
+        <div class="action-card-desc">Emite una cobertura nueva para un cliente</div>
+      </div>
+    </div>
+
+    <div class="action-card">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+      <div>
+        <div class="action-card-title">Gestionar clientes</div>
+        <div class="action-card-desc">Consulta y edita perfiles de asegurados</div>
+      </div>
+    </div>
+
+    <div class="action-card">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+      </svg>
+      <div>
+        <div class="action-card-title">Reportes</div>
+        <div class="action-card-desc">Genera informes de coberturas y siniestros</div>
+      </div>
+    </div>
+
+    <div class="action-card">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
+      </svg>
+      <div>
+        <div class="action-card-title">Configuración</div>
+        <div class="action-card-desc">Ajusta parámetros del sistema y usuarios</div>
+      </div>
+    </div>
+  </div> -->
+
+</main>
+
+<footer class="footer">
+  © 2026 SeguroViaje — Todos los derechos reservados
+</footer>
+
+
+<script>
+
+window.addEventListener('DOMContentLoaded', () => {
+
+    const idRolMenu = Number(sessionStorage.getItem('idRol'));
+
+    console.log("ROL:", idRolMenu);
+
+    /*
+        1 = Todo
+        2 = Solo Configuración
+        3 = Solo Gestión SIN Siniestros
+        4 = Solo Siniestros
+    */
+
+    // ROL 2
+    if (idRolMenu === 2) {
+
+        document.getElementById('menuClientes').style.display = 'none';
+        document.getElementById('menuPolizas').style.display = 'none';
+        document.getElementById('menuCotizaciones').style.display = 'none';
+        document.getElementById('menuSiniestros').style.display = 'none';
+
+    }
+
+    // ROL 3
+    else if (idRolMenu === 3) {
+ document.getElementById('grupoConfiguracion').style.display = 'none';
+        // SOLO ocultar siniestros
+        document.getElementById('menuSiniestros').style.display = 'none';
+
+    }
+
+    // ROL 4
+    else if (idRolMenu === 4) {
+ document.getElementById('grupoConfiguracion').style.display = 'none';
+        document.getElementById('menuClientes').style.display = 'none';
+        document.getElementById('menuPolizas').style.display = 'none';
+        document.getElementById('menuCotizaciones').style.display = 'none';
+
+    }
+
+});
+
+</script>
+<script>
+  /* ── Menú hamburguesa / sidebar ── */
+  function toggleSidebar() {
+    document.body.classList.toggle('sidebar-open');
+  }
+  function toggleGroup(id) {
+    document.getElementById(id).classList.toggle('open');
+  }
+</script>
+
+<script>
+  // ── Variables de sesión ────────────────────────────────────────────────
+  const token      = sessionStorage.getItem('access_token');
+  const tokenType  = sessionStorage.getItem('token_type');
+  const idUsuario  = sessionStorage.getItem('idUsuario');
+  const nombre     = sessionStorage.getItem('nombreUsuario');
+  const email      = sessionStorage.getItem('emailUsuario');
+  const idRol      = sessionStorage.getItem('idRol');
+  const rol        = sessionStorage.getItem('rol');
+  // ──────────────────────────────────────────────────────────────────────
+
+  if (!token || !nombre) {
+    window.location.href = 'login.html';
+  } else {
+    document.getElementById('welcomeName').textContent = nombre;
+    document.getElementById('navName').textContent = nombre;
+    document.getElementById('avatarInitial').textContent = nombre.charAt(0).toUpperCase();
+    document.title = `SeguroViaje — Hola, ${nombre}`;
+    // Mostrar token e id_usuario en el hero
+    document.getElementById('infoIdUsuario').textContent = idUsuario || '—';
+document.getElementById('infoIdRol').textContent     = idRol     || '—';
+document.getElementById('infoToken').textContent     = token     || '—';
+  }
+
+  // Live clock
+  function updateClock() {
+    const now  = new Date();
+    const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+                   hour: '2-digit', minute: '2-digit' };
+    document.getElementById('currentDateTime').textContent =
+      now.toLocaleDateString('es-ES', opts);
+  }
+  updateClock();
+  setInterval(updateClock, 60000);
+
+  // ── Panel de verificación de sesión ───────────────────────────────────
+  function toggleSessionPanel() {
+    const panel = document.getElementById('sessionPanel');
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+  }
+
+  // Inyectar panel al cargar
+  window.addEventListener('DOMContentLoaded', () => {
+    const tokenShort = token ? token.substring(0, 20) + '…' : '—';
+    const panel = document.createElement('div');
+    panel.id = 'sessionPanel';
+    panel.style.cssText = `
+      display:none; position:fixed; bottom:24px; right:24px; z-index:9999;
+      background:#162336; border:1px solid #243550; border-radius:14px;
+      padding:20px 24px; min-width:300px; box-shadow:0 8px 32px rgba(0,0,0,0.4);
+      font-family:'Inter',sans-serif; font-size:0.82rem; color:#8A9BB0;
+    `;
+    panel.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <span style="font-weight:700;font-size:0.88rem;color:#F8FAFC;">🔐 Variables de sesión</span>
+        <button onclick="toggleSessionPanel()" style="background:none;border:none;color:#8A9BB0;cursor:pointer;font-size:1rem;line-height:1;">✕</button>
+      </div>
+      ${[
+        ['access_token',  tokenShort],
+        ['token_type',    tokenType  || '—'],
+        ['idUsuario',     idUsuario  || '—'],
+        ['nombreUsuario', nombre     || '—'],
+        ['emailUsuario',  email      || '—'],
+        ['idRol',         idRol      || '—'],
+        ['rol',           rol        || '—'],
+      ].map(([k, v]) => `
+        <div style="display:flex;justify-content:space-between;gap:16px;padding:6px 0;border-bottom:1px solid #1C2D42;">
+          <span style="color:#3BC4A0;font-weight:600;">${k}</span>
+          <span style="color:#F8FAFC;text-align:right;word-break:break-all;">${v}</span>
+        </div>
+      `).join('')}
+      <div style="margin-top:12px;font-size:0.72rem;color:#3a4f65;text-align:center;">Solo visible en desarrollo</div>
+    `;
+    document.body.appendChild(panel);
+
+    // Botón flotante para abrir el panel
+    const fab = document.createElement('button');
+    fab.title = 'Ver variables de sesión';
+    fab.onclick = toggleSessionPanel;
+    fab.style.cssText = `
+      position:fixed; bottom:24px; right:24px; z-index:9998;
+      width:44px; height:44px; border-radius:50%;
+      background:linear-gradient(135deg,#1E6FBF,#3BC4A0);
+      border:none; cursor:pointer; display:flex; align-items:center; justify-content:center;
+      box-shadow:0 4px 16px rgba(59,196,160,0.35);
+      transition:transform .2s;
+    `;
+    fab.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    </svg>`;
+    fab.addEventListener('mouseover', () => fab.style.transform = 'scale(1.1)');
+    fab.addEventListener('mouseout',  () => fab.style.transform = 'scale(1)');
+    document.body.appendChild(fab);
+  });
+  // ──────────────────────────────────────────────────────────────────────
+
+  async function logout() {
+    try {
+      const idUsuario = sessionStorage.getItem('idUsuario');
+      const token = sessionStorage.getItem('access_token');
+
+      if (idUsuario) {
+        await fetch(`http://127.0.0.1:8000/api/usuario/${idUsuario}/disable-token`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+      }
+    } catch(error) {
+      console.error('Error al deshabilitar token:', error);
+    }
+
+    sessionStorage.removeItem('access_token');
+    sessionStorage.removeItem('token_type');
+    sessionStorage.removeItem('idUsuario');
+    sessionStorage.removeItem('nombreUsuario');
+    sessionStorage.removeItem('emailUsuario');
+    sessionStorage.removeItem('idRol');
+    sessionStorage.removeItem('rol');
+    sessionStorage.removeItem('usuario');
+
+    window.location.href = 'login.html';
+  }
+</script>
+</body>
+</html>
